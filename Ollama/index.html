@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #000;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      header {
+        padding: 15px;
+        border-bottom: 1px solid #333;
+        text-align: center;
+        font-size: 18px;
+        letter-spacing: 1px;
+      }
+
+      #chat {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .msg {
+        margin-bottom: 15px;
+        max-width: 70%;
+        padding: 12px;
+        border-radius: 8px;
+        line-height: 1.4;
+      }
+
+      .user {
+        background: #111;
+        align-self: flex-end;
+        border: 1px solid #444;
+      }
+
+      .bot {
+        background: #000;
+        border: 1px solid #555;
+      }
+
+      #inputBar {
+        display: flex;
+        border-top: 1px solid #333;
+      }
+
+      input {
+        flex: 1;
+        padding: 15px;
+        background: #000;
+        color: #fff;
+        border: none;
+        outline: none;
+      }
+
+      button {
+        padding: 15px 20px;
+        background: #fff;
+        color: #000;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #ddd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>LOCAL AI</header>
+
+    <div id="chat"></div>
+
+    <div id="inputBar">
+      <input id="input" placeholder="Type your message..." />
+      <button onclick="send()">Send</button>
+    </div>
+
+    <script>
+      const API_URL = "https://ollama-api.rupa.dev/chat";
+
+      function addMessage(text, type) {
+        const chat = document.getElementById("chat");
+        const div = document.createElement("div");
+        div.className = "msg " + type;
+        div.innerText = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      async function send() {
+        const input = document.getElementById("input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user");
+        input.value = "";
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "msg bot";
+        botMsg.innerText = "";
+        document.getElementById("chat").appendChild(botMsg);
+
+        const res = await fetch("https://ollama-api.rupa.dev/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: text }),
+        });
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          botMsg.innerText += chunk;
+        }
+      }
+    </script>
+  </body>
+</html>
