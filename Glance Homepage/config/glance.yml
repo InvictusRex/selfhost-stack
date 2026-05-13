@@ -1,0 +1,63 @@
+theme:
+  background-color: 50 1 6
+  primary-color: 43 74 60
+  positive-color: 61 66 44
+  negative-color: 6 96 59
+  contrast-multiplier: 1.2
+
+branding:
+  hide-footer: true
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 12h
+
+          - type: weather
+            location: Vadodara
+            units: metric
+
+          - type: docker-containers
+            socket-path: /var/run/docker.sock
+            collapse-after: 8
+
+      - size: full
+        widgets:
+          - type: search
+            search-engine: google
+
+          - type: monitor
+            title: Services
+            cache: 1m
+            sites:
+              - title: Jellyfin
+                url: https://jellyfin.rupa.dev
+                icon: si:jellyfin
+
+              - title: Ollama
+                url: https://ollama.rupa.dev
+                icon: si:ollama
+
+              - title: Grafana
+                url: https://grafana.rupa.dev
+                icon: si:grafana
+
+              - title: Uptime Kuma
+                url: https://kuma.rupa.dev
+                icon: si:uptimekuma
+
+                  #- title: Prometheus
+                  #url: https://prometheus.rupa.dev
+                  #icon: si:prometheus
+
+  - name: Monitoring
+    columns:
+      - size: full
+        widgets:
+          - type: iframe
+            hide-header: true
+            source: https://grafana.rupa.dev/d/dfly6bxckr6yoa/invictus-dashboard?orgId=1&refresh=5s&from=now-1h&to=now&kiosk
+            height: 1400
