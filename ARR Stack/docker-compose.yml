@@ -1,0 +1,175 @@
+services:
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+      - WEBUI_PORT=${PORT_QBIT}
+
+    volumes:
+      - ${CONFIG}/qbittorrent:/config
+      - ${DATA}:/data
+
+    ports:
+      - "${PORT_QBIT}:${PORT_QBIT}"
+      - "6881:6881"
+      - "6881:6881/udp"
+
+    networks:
+      - media-net
+
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+
+    volumes:
+      - ${CONFIG}/prowlarr:/config
+
+    ports:
+      - "${PORT_PROWLARR}:9696"
+
+    networks:
+      - media-net
+
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+
+    volumes:
+      - ${CONFIG}/radarr:/config
+      - ${DATA}:/data
+
+    ports:
+      - "${PORT_RADARR}:7878"
+
+    networks:
+      - media-net
+
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+
+    volumes:
+      - ${CONFIG}/sonarr:/config
+      - ${DATA}:/data
+
+    ports:
+      - "${PORT_SONARR}:8989"
+
+    networks:
+      - media-net
+
+
+  bazarr:
+    image: ghcr.io/hotio/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+
+    volumes:
+      - ${CONFIG}/bazarr:/config
+      - ${DATA}:/data
+
+    ports:
+      - "${PORT_BAZARR}:6767"
+
+    networks:
+      - media-net
+
+
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    restart: unless-stopped
+    init: true
+
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TIMEZONE}
+      - PORT=5055
+
+    volumes:
+      - ${CONFIG}/seerr:/app/config
+
+    ports:
+      - "${PORT_OVERSEERR}:5055"
+
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+
+    networks:
+      - media-net
+
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    environment:
+      - TZ=${TIMEZONE}
+
+    volumes:
+      - ${CONFIG}/jellyfin:/config
+      - ${DATA}/media:/media
+
+    ports:
+      - "${PORT_JELLYFIN}:8096"
+
+    networks:
+      - media-net
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+
+    ports:
+      - "8191:8191"
+
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=${TIMEZONE}
+
+    networks:
+      - media-net
+
+networks:
+  media-net:
+    driver: bridge
