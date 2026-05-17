@@ -1,0 +1,23 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:v2
+    container_name: filebrowser
+
+    restart: unless-stopped
+
+    ports:
+      - "8095:80"
+
+    user: "1000:1000"
+
+    environment:
+      FB_NOAUTH: false
+
+    command:
+      - --root
+      - /srv
+
+    volumes:
+      - /srv/cloud/nextcloud-data/invictus/files:/srv/cloud
+      - /srv/photos:/srv/photos
+      - /srv/media:/srv/media
