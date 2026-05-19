@@ -1,0 +1,47 @@
+services:
+  fiftyone:
+    image: voxel51/fiftyone:latest
+
+    container_name: fiftyone
+
+    restart: unless-stopped
+
+    ports:
+      - "5151:5151"
+
+    environment:
+      - FIFTYONE_DATABASE_URI=mongodb://mongo:27017/fiftyone
+
+    depends_on:
+      - mongo
+
+    volumes:
+      - ./data:/data
+      - ./fiftyone:/root/.fiftyone
+
+    command: |
+      python -c "
+      import fiftyone as fo;
+      import fiftyone.zoo as foz;
+
+      dataset = foz.load_zoo_dataset('quickstart', max_samples=20);
+
+      session = fo.launch_app(
+          dataset,
+          address='0.0.0.0',
+          port=5151,
+          auto=False
+      );
+
+      session.wait()
+      "
+
+  mongo:
+    image: mongo:7
+
+    container_name: fiftyone_mongo
+
+    restart: unless-stopped
+
+    volumes:
+      - ./mongo:/data/db
