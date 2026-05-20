@@ -1,0 +1,70 @@
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:release
+    restart: unless-stopped
+
+    ports:
+      - "2283:2283"
+
+    depends_on:
+      - redis
+      - postgres
+
+    environment:
+      DB_HOSTNAME: postgres
+      DB_USERNAME: immich
+      DB_PASSWORD: your_password
+      DB_DATABASE_NAME: immich
+      REDIS_HOSTNAME: redis
+
+    volumes:
+      - /srv/photos/photos/library:/usr/src/app/upload/library
+      - /srv/photos/photos/upload:/usr/src/app/upload/upload
+      - /srv/photos/photos/profile:/usr/src/app/upload/profile
+      - /srv/photos/photos/thumbs:/usr/src/app/upload/thumbs
+      - /srv/photos/photos/encoded-video:/usr/src/app/upload/encoded-video
+      - ./thumbnails:/usr/src/app/.thumbs
+      - /srv/photos/photos/external:/external
+      - /srv/photos/photos/backups:/usr/src/app/upload/backups
+
+    networks:
+      - immich
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    restart: unless-stopped
+
+    volumes:
+      - ./model-cache:/cache
+
+    networks:
+      - immich
+
+  redis:
+    container_name: immich_redis
+    image: redis:7
+    restart: unless-stopped
+
+    networks:
+      - immich
+
+  postgres:
+    container_name: immich_postgres
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: immich
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: immich
+
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+    networks:
+      - immich
+
+networks:
+  immich:
