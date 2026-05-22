@@ -1,0 +1,41 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: nextcloud-db
+    restart: unless-stopped
+
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "your_password"
+      MYSQL_PASSWORD: "your_password"
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+
+    volumes:
+      - ./db:/var/lib/mysql
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+
+    ports:
+      - "8081:80"
+
+    depends_on:
+      - mariadb
+
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: "your_password"
+      MYSQL_HOST: mariadb
+      TZ: Asia/Kolkata
+
+    volumes:
+      - nextcloud_app:/var/www/html
+      - /srv/cloud/nextcloud-data:/var/www/html/data
+
+volumes:
+  nextcloud_app:
