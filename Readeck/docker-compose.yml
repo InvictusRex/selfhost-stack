@@ -1,0 +1,16 @@
+services:
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+
+    container_name: readeck
+
+    restart: unless-stopped
+
+    ports:
+      - "8001:8000"
+
+    environment:
+      - READECK_SERVER_HOST=0.0.0.0
+
+    volumes:
+      - ./data:/readeck
