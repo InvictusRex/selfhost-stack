@@ -1,0 +1,34 @@
+services:
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:latest
+
+    container_name: speedtest-tracker
+
+    restart: unless-stopped
+
+    ports:
+      - "8765:80"
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+
+      - APP_KEY=your_app_key
+
+      - DB_CONNECTION=sqlite
+
+      - SPEEDTEST_SCHEDULE=0 */6 * * *
+
+      - DISPLAY_TIMEZONE=Asia/Kolkata
+
+      - APP_NAME=Invictus Speedtest
+
+      - APP_URL=http://192.168.1.4:8765
+
+      - ADMIN_NAME=you_r_admin_name
+      - ADMIN_EMAIL=your_admin_email
+      - ADMIN_PASSWORD=your_admin_password
+
+    volumes:
+      - ./config:/config
