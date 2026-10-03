@@ -9,6 +9,8 @@ services:
       - "8095:80"
 
     user: "1000:1000"
+    group_add:
+      - "33"   # www-data: read access to the Nextcloud data dir
 
     environment:
       FB_NOAUTH: false
