@@ -1,0 +1,23 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:latest
+
+    container_name: ntfy
+
+    command: serve
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8010:80"
+
+    environment:
+      - NTFY_BASE_URL=https://ntfy.rupa.dev
+      - NTFY_BEHIND_PROXY=true
+      - NTFY_CACHE_FILE=/var/lib/ntfy/cache.db
+      - NTFY_AUTH_FILE=/var/lib/ntfy/auth.db
+      # Public endpoint, so nobody may read or publish without a token.
+      - NTFY_AUTH_DEFAULT_ACCESS=deny-all
+
+    volumes:
+      - ./data:/var/lib/ntfy
