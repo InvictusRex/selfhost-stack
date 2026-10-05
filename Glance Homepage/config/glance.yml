@@ -11,6 +11,8 @@ branding:
 pages:
   - name: Home
     columns:
+
+      # LEFT SIDEBAR
       - size: small
         widgets:
           - type: clock
@@ -20,39 +22,168 @@ pages:
             location: Vadodara
             units: metric
 
-          - type: docker-containers
-            socket-path: /var/run/docker.sock
-            collapse-after: 8
+          - type: bookmarks
+            groups:
+              - title: Dev
+                links:
+                  - title: GitHub
+                    url: https://github.com/InvictusRex
+                    icon: si:github
 
+                  - title: Kaggle
+                    url: https://www.kaggle.com/rupankarmajumdar
+                    icon: si:kaggle
+
+          - type: bookmarks
+            groups:
+              - title: Contact
+                links:
+                  - title: LinkedIn
+                    url: https://www.linkedin.com/in/rupankar-majumdar/
+                    icon: si:linkedin
+
+                  - title: Email
+                    url: mailto:rupankarvitc@gmail.com
+                    icon: si:gmail
+
+                  - title: Website
+                    url: https://rupa.dev
+                    icon: si:googlechrome
+
+
+      # MAIN CONTENT
       - size: full
         widgets:
+
           - type: search
             search-engine: google
 
+          # INFRA SERVICES
           - type: monitor
             title: Services
             cache: 1m
             sites:
-              - title: Jellyfin
-                url: https://jellyfin.rupa.dev
-                icon: si:jellyfin
+              - title: FileBrowser
+                url: https://file.rupa.dev/login
+                icon: mdi:folder
+
+              - title: Paperless
+                url: https://paperless.rupa.dev
+                icon: si:paperlessngx
+
+                  #- title: Jellyfin
+                  #url: https://jellyfin.rupa.dev
+                  #icon: si:jellyfin
+                  #check-url: https://jellyfin.rupa.dev/health
+              
+              - title: Nextcloud
+                url: https://cloud.rupa.dev
+                icon: si:nextcloud
+
+              - title: Immich
+                url: https://immich.rupa.dev
+                icon: si:immich
+
+              - title: Vaultwarden
+                url: https://vault.rupa.dev
+                icon: si:bitwarden
 
               - title: Ollama
                 url: https://ollama.rupa.dev
                 icon: si:ollama
 
+              - title: Readeck
+                url: https://read.rupa.dev
+                icon: si:bookstack
+              
+              - title: FiftyOne
+                url: https://data.rupa.dev
+                icon: si:opencv
+
+              - title: Seanime
+                url: https://anime.rupa.dev
+                icon: si:anilist
+          
+          - type: monitor
+            title: Infrastructure
+            cache: 1m
+            sites:
               - title: Grafana
                 url: https://grafana.rupa.dev
                 icon: si:grafana
+                check-url: https://grafana.rupa.dev/api/health
+              
+              - title: Beszel
+                url: https://beszel.rupa.dev/system/edyqfcl2ocb4gse
+                icon: si:serverfault
 
               - title: Uptime Kuma
                 url: https://kuma.rupa.dev
                 icon: si:uptimekuma
 
-                  #- title: Prometheus
-                  #url: https://prometheus.rupa.dev
-                  #icon: si:prometheus
+              - title: Portainer
+                url: https://portainer.rupa.dev
+                icon: si:portainer
+              
+              - title: Cloudflare
+                url: https://dash.cloudflare.com
+                icon: si:cloudflare
+                check-url: https://one.one.one.one
+              
+              - title: Tailscale
+                url: https://login.tailscale.com/admin/machines
+                icon: si:tailscale
+                check-url: http://100.71.202.1:8096
+              
+              - title: Scrutiny
+                url: https://scrutiny.rupa.dev
+                icon: si:seagate
+              
+              - title: Speedtest Tracker
+                url: https://speedtest.rupa.dev
+                icon: si:speedtest
 
+              - title: Ntfy
+                url: https://ntfy.rupa.dev
+                icon: si:ntfy
+                check-url: https://ntfy.rupa.dev/v1/health
+
+      - size: small
+        widgets:
+          # ARR STACK
+          - type: monitor
+            title: ARR Stack
+            cache: 1m
+            sites:
+              - title: Jellyfin
+                url: https://jellyfin.rupa.dev
+                icon: si:jellyfin
+                check-url: https://jellyfin.rupa.dev/health
+
+              - title: Seerr
+                url: https://seerr.rupa.dev
+                icon: mdi:television-guide
+
+              - title: Radarr
+                url: https://radarr.rupa.dev
+                icon: si:radarr
+
+              - title: Sonarr
+                url: https://sonarr.rupa.dev
+                icon: si:sonarr
+
+              - title: Prowlarr
+                url: https://prowlarr.rupa.dev
+                icon: mdi:magnify
+
+              - title: Bazarr
+                url: https://bazarr.rupa.dev
+                icon: mdi:subtitles
+
+              - title: qBittorrent
+                url: https://qbit.rupa.dev
+                icon: si:qbittorrent
+    
   - name: Monitoring
     columns:
       - size: full
@@ -60,4 +191,4 @@ pages:
           - type: iframe
             hide-header: true
             source: https://grafana.rupa.dev/d/dfly6bxckr6yoa/invictus-dashboard?orgId=1&refresh=5s&from=now-1h&to=now&kiosk
-            height: 1400
+            height: 2000
